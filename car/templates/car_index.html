@@ -1,0 +1,25 @@
+{% extends "_layout.html" %}
+
+{% block title %}Список авто{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Список авто</h1>
+    <div class="row">
+        {% for car in cars %}
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ car.brand }} {{ car.model }}</h5>
+                        <p class="card-text"><strong>Рік:</strong> {{ car.year }}</p>
+                        <p class="card-text">{{ car.description|default:"" }}</p>
+                        <a href="{% url 'car_detail' car.id %}" class="btn btn-primary">Детальніше</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">Немає авто для відображення.</div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
