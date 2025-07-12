@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Список бронювань</h2>
+    {% if bookings %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Автомобіль</th>
+                    <th>Ім'я</th>
+                    <th>Дати</th>
+                    <th>Статус</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>{{ booking.id }}</td>
+                        <td>{{ booking.car }}</td>
+                        <td>{{ booking.name }}</td>
+                        <td>{{ booking.date_from }} - {{ booking.date_to }}</td>
+                        <td>{{ booking.get_status_display }}</td>
+                        <td>
+                            {% if booking.status == 'pending' %}
+                                <a href="{% url 'confirm_booking' booking.id %}" class="btn btn-success">Підтвердити</a>
+                                <a href="{% url 'cancel_booking' booking.id %}" class="btn btn-danger">Скасувати</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Немає бронювань.</p>
+    {% endif %}
+</div>
+{% endblock %}

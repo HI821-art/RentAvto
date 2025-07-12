@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Бронювання успішне!</h2>
+    <p>Ваше бронювання (ID: {{ booking.id }}) відправлено на підтвердження.</p>
+    <p>Автомобіль: {{ booking.car }}</p>
+    <p>Період: {{ booking.date_from }} - {{ booking.date_to }}</p>
+    <p>Статус: {{ booking.get_status_display }}</p>
+    <a href="{% url 'car_index' %}" class="btn btn-primary">Повернутися</a>
+</div>
+{% endblock %}

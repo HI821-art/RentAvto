@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Car, Booking
 from .forms.create import CarForm
 from .forms.edit import EditCarForm
 from .forms.booking import BookingForm
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.contrib import messages
+from .models import Car, Booking
+
 def index(request):
     return render(request, "car_index.html")
 
@@ -32,7 +33,7 @@ def car_detail(request, id):
 
 def car_gallery(request, id):
     car = get_object_or_404(Car, id=id)
-    photos = []  
+    photos = car.photo_set.all()
     return render(request, 'car_gallery.html', {'car': car, 'photos': photos})
 
 def create_car(request):
@@ -68,8 +69,6 @@ def edit_car(request, id):
             return redirect('car_index')
     return render(request, "create.html", {"form": form, "edit": True, "car": car})
 
-from .forms.booking import BookingForm
-
 def rent_car(request):
     car_id = request.GET.get('car_id')
     initial = {}
@@ -93,14 +92,40 @@ def rent_car(request):
             if overlap:
                 messages.error(request, "Цей автомобіль вже заброньований на вибрані дати.")
             else:
-                form.save()
-                return render(request, './rent_success.html')
+                booking = form.save(commit=False)
+                booking.status = 'pending'  # Початковий статус
+                booking.save()
+                messages.success(request, "Ваше бронювання відправлено на підтвердження!")
+                return redirect('booking_success', booking_id=booking.id)
     else:
         form = BookingForm(initial=initial)
-    return render(request, './rent_car.html', {'form': form, 'booked_ranges': booked_ranges})
+    return render(request, 'rent_car.html', {'form': form, 'booked_ranges': booked_ranges})
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Car
+def booking_success(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    return render(request, 'rent_success.html', {'booking': booking})
+
+def confirm_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    if request.user.is_staff:  # Перевірка, що це адміністратор
+        booking.status = 'confirmed'
+        booking.car.available = False  # Оновлюємо доступність
+        booking.save()
+        booking.car.save()
+        messages.success(request, f"Бронювання {booking.id} підтверджено!")
+    return redirect('booking_list')
+
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(Booking, id=booking_id)
+    if request.user.is_staff or booking.email == request.user.email:  # Адмін або власник
+        booking.status = 'canceled'
+        booking.save()
+        messages.success(request, f"Бронювання {booking.id} скасовано!")
+    return redirect('booking_list')
+
+def booking_list(request):
+    bookings = Booking.objects.all().order_by('-created_at')
+    return render(request, 'booking_list.html', {'bookings': bookings})
 
 def add_to_favorites(request, car_id):
     favorites = request.session.get('favorites', [])
@@ -119,4 +144,4 @@ def remove_from_favorites(request, car_id):
 def favorites_list(request):
     favorites = request.session.get('favorites', [])
     cars = Car.objects.filter(id__in=favorites)
-    return render(request, './favorites_list.html', {'cars': cars})
+    return render(request, 'favorites_list.html', {'cars': cars})

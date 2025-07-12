@@ -1,8 +1,9 @@
+<!-- car/templates/car_index.html -->
 {% extends "_layout.html" %}
 {% block content %}
-<div class="text-center mt-5">
-    <h1>Вітаємо у сервісі оренди авто!</h1>
-    <p class="lead">Оберіть автомобіль для перегляду у <a href="{% url 'catalog' %}" class="btn btn-primary">Каталозі</a></p>
-    <a href="{% url 'car_create' %}" class="btn btn-success mt-3">Створити новий автомобіль</a>
+<div class="container mt-5">
+    <h1>Car Rental Service</h1>
+    <p>Ласкаво просимо до нашого сервісу прокату автомобілів!</p>
+    <a href="{% url 'car_catalog' %}" class="btn btn-primary">Переглянути автомобілі</a>
 </div>
 {% endblock %}

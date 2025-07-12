@@ -3,7 +3,7 @@
 <div class="container py-4">
     <h2 class="mb-4 text-center">Каталог автомобілів</h2>
     <div class="text-end mb-3">
-        <a href="{% url 'car_create' %}" class="btn btn-success">Додати автомобіль</a>
+      <a href="{% url 'create_car' %}" class="btn btn-success">Додати автомобіль</a>
     </div>
     {% if cars %}
     <table class="table table-striped align-middle">
@@ -25,8 +25,8 @@
                 <td>{{ car.year }}</td>
                 <td>
                     <a href="{% url 'car_detail' car.id %}" class="btn btn-info btn-sm">Деталі</a>
-                    <a href="{% url 'car_edit' car.id %}" class="btn btn-warning btn-sm">Редагувати</a>
-                    <a href="{% url 'car_delete' car.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Ви впевнені, що хочете видалити цей автомобіль?');">Видалити</a>
+                    <a href="{% url 'edit_car' car.id %}" class="btn btn-warning btn-sm">Редагувати</a>
+                    <a href="{% url 'delete_car' car.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Ви впевнені, що хочете видалити цей автомобіль?');">Видалити</a>
                 </td>
             </tr>
             {% endfor %}
