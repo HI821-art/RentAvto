@@ -1,38 +1,100 @@
-from django.shortcuts import render
-
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Car, Booking
+from .forms.create import CarForm
+from .forms.edit import EditCarForm
+from .forms.booking import BookingForm
+from django.http import HttpResponse
+from django.core.paginator import Paginator
+from django.contrib import messages
 def index(request):
-    cars = [
-        {"id": 1, "brand": "Toyota", "model": "Camry", "year": 2020, "description": "Надійний седан.", "image": "toyota.jpg"},
-        {"id": 2, "brand": "BMW", "model": "X5", "year": 2019, "description": "Потужний кросовер.", "image": "bmw.jpg"},
-        {"id": 3, "brand": "Tesla", "model": "Model S", "year": 2022, "description": "Електромобіль з автопілотом.", "image": "tesla.jpg"},
-        {"id": 4, "brand": "Ford", "model": "Mustang", "year": 2018, "description": "Легендарний спорткар.", "image": "mustang.jpg"},
-    ]
-    return render(request, "car_index.html", {"cars": cars, "count": len(cars)})
+    return render(request, "car_index.html")
+
+def catalog(request):
+    car_list = Car.objects.all().order_by("id")
+    page_number = request.GET.get("page", 1)
+    page_size = request.GET.get("size", 5)
+    paginator = Paginator(car_list, page_size)
+    page_obj = paginator.get_page(page_number)
+    return render(
+        request,
+        "catalog.html",
+        {
+            "cars": page_obj.object_list,
+            "count": paginator.count,
+            "page_obj": page_obj,
+            "page_size": page_size,
+        },
+    )
 
 def car_detail(request, id):
-    cars = [
-        {"id": 1, "brand": "Toyota", "model": "Camry", "year": 2020, "description": "Надійний седан.", "image": "toyota.jpg"},
-        {"id": 2, "brand": "BMW", "model": "X5", "year": 2019, "description": "Потужний кросовер.", "image": "bmw.jpg"},
-        {"id": 3, "brand": "Tesla", "model": "Model S", "year": 2022, "description": "Електромобіль з автопілотом.", "image": "tesla.jpg"},
-        {"id": 4, "brand": "Ford", "model": "Mustang", "year": 2018, "description": "Легендарний спорткар.", "image": "mustang.jpg"},
-    ]
-    car = next((c for c in cars if c["id"] == id), None)
-    if not car:
-        return render(request, "404.html", status=404)
+    car = get_object_or_404(Car, id=id)
     return render(request, 'car_detail.html', {'car': car})
+
 def car_gallery(request, id):
-    cars = [
-        {"id": 1, "brand": "Toyota", "model": "Camry"},
-        {"id": 2, "brand": "BMW", "model": "X5"},
-        {"id": 3, "brand": "Tesla", "model": "Model S"},
-        {"id": 4, "brand": "Ford", "model": "Mustang"},
-    ]
-    car = next((c for c in cars if c["id"] == id), None)
-    if not car:
-        return render(request, "404.html", status=404)
-    # Тестові фото для Toyota Camry
-    photos = [
-        {"title": "Camry Exterior", "description": "Зовнішній вигляд", "image": ""},
-        {"title": "Camry Interior", "description": "Салон", "image": ""},
-    ] if id == 1 else []
+    car = get_object_or_404(Car, id=id)
+    photos = []  
     return render(request, 'car_gallery.html', {'car': car, 'photos': photos})
+
+def create_car(request):
+    if request.method == 'POST':
+        form = CarForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('car_index')
+    else:
+        form = CarForm()
+    return render(request, 'create.html', {'form': form})
+
+def delete_car(request, id):
+    if id <= 0:
+        return HttpResponse("Invalid ID")
+    car = get_object_or_404(Car, pk=id)
+    if request.method == "POST":
+        if hasattr(car, "image") and car.image:
+            car.image.delete(save=False)
+        car.delete()
+        return redirect('car_index')
+    return render(request, "delete.html", {"car": car})
+
+def edit_car(request, id):
+    car = get_object_or_404(Car, pk=id)
+    form = EditCarForm(instance=car)
+    if request.method == "POST":
+        form = EditCarForm(request.POST, request.FILES, instance=car)
+        if form.is_valid():
+            if request.FILES and hasattr(car, "image") and car.image:
+                car.image.delete(save=False)
+            form.save()
+            return redirect('car_index')
+    return render(request, "create.html", {"form": form, "edit": True, "car": car})
+
+from .forms.booking import BookingForm
+
+def rent_car(request):
+    car_id = request.GET.get('car_id')
+    initial = {}
+    booked_ranges = []
+    if car_id:
+        initial['car'] = car_id
+        booked_ranges = Booking.objects.filter(car=car_id).values('date_from', 'date_to')
+
+    if request.method == 'POST':
+        form = BookingForm(request.POST)
+        if form.is_valid():
+            car = form.cleaned_data['car']
+            date_from = form.cleaned_data['date_from']
+            date_to = form.cleaned_data['date_to']
+
+            overlap = Booking.objects.filter(
+                car=car,
+                date_from__lte=date_to,
+                date_to__gte=date_from
+            ).exists()
+            if overlap:
+                messages.error(request, "Цей автомобіль вже заброньований на вибрані дати.")
+            else:
+                form.save()
+                return render(request, './rent_success.html')
+    else:
+        form = BookingForm(initial=initial)
+    return render(request, './rent_car.html', {'form': form, 'booked_ranges': booked_ranges})

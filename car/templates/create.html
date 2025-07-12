@@ -1,0 +1,50 @@
+{% extends '_layout.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="container py-5" style="background: #f8f9fa; min-height: 100vh;">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg rounded-4 border-0">
+                <div class="card-header bg-primary text-white text-center rounded-top-4">
+                    <h2 class="mb-1">{% if edit %}Редагувати автомобіль{% else %}Додати новий автомобіль{% endif %}</h2>
+                    <p class="mb-0 small">{% if edit %}Внесіть зміни до даних авто{% else %}Заповніть форму для додавання авто{% endif %}</p>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data" autocomplete="off">
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {% if field.errors %}
+                                    {{ field|add_class:"form-control is-invalid" }}
+                                {% else %}
+                                    {{ field|add_class:"form-control" }}
+                                {% endif %}
+                                {% if field.help_text %}
+                                    <div class="form-text">{{ field.help_text }}</div>
+                                {% endif %}
+                                {% for error in field.errors %}
+                                    <div class="invalid-feedback d-block">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <a href="{% url 'car_index' %}" class="btn btn-outline-secondary w-100">Назад</a>
+                            </div>
+                            <div class="col-6">
+                                <button type="submit" class="btn btn-success w-100">
+                                    {% if edit %}Зберегти зміни{% else %}Додати{% endif %}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>  
+        </div>
+    </div>
+</div>
+
+{% endblock %}

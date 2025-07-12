@@ -1,0 +1,84 @@
+{% extends "_layout.html" %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4 text-center">Каталог автомобілів</h2>
+    <div class="text-end mb-3">
+        <a href="{% url 'car_create' %}" class="btn btn-success">Додати автомобіль</a>
+    </div>
+    {% if cars %}
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Марка</th>
+                <th>Модель</th>
+                <th>Рік</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for car in cars %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ car.brand }}</td>
+                <td>{{ car.model }}</td>
+                <td>{{ car.year }}</td>
+                <td>
+                    <a href="{% url 'car_detail' car.id %}" class="btn btn-info btn-sm">Деталі</a>
+                    <a href="{% url 'car_edit' car.id %}" class="btn btn-warning btn-sm">Редагувати</a>
+                    <a href="{% url 'car_delete' car.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Ви впевнені, що хочете видалити цей автомобіль?');">Видалити</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <nav class="d-flex justify-content-center">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </span>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active" aria-current="page">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <p class="text-center">Показано {{ page_obj.start_index }}-{{ page_obj.end_index }} з {{ count }}</p>
+    {% else %}
+    <p class="text-center">Автомобілів не знайдено.</p>
+    {% endif %}
+</div>
+{% endblock %}

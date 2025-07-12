@@ -1,0 +1,11 @@
+{% extends "_layout.html" %}
+
+{% block content %}
+<h2>Видалити автомобіль</h2>
+<p>Ви впевнені, що хочете видалити {{ car.brand }} {{ car.model }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Видалити</button>
+    <a href="{% url 'car_index' %}" class="btn btn-secondary">Скасувати</a>
+</form>
+{% endblock %}
