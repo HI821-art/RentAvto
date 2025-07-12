@@ -1,0 +1,9 @@
+{% extends "_layout.html" %}
+{% block content %}
+<div class="container mt-5" style="max-width: 500px;">
+    <div class="alert alert-success text-center shadow">
+        <h4 class="mb-3">Дякуємо! Ваше бронювання прийнято.</h4>
+        <a href="{% url 'car_index' %}" class="btn btn-primary">На головну</a>
+    </div>
+</div>
+{% endblock %}

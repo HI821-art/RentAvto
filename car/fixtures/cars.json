@@ -1,0 +1,332 @@
+[
+  {
+    "model": "car.car",
+    "pk": 1,
+    "fields": {
+      "brand": "Toyota",
+      "model": "Corolla",
+      "price_per_day": "800.00",
+      "year": 2020,
+      "available": true,
+      "consumption": 6.5,
+      "color": "Сірий",
+      "description": "Надійний автомобіль для міста.",
+      "image": "cars/toyota_corolla.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 2,
+    "fields": {
+      "brand": "BMW",
+      "model": "X5",
+      "price_per_day": "2000.00",
+      "year": 2019,
+      "available": false,
+      "consumption": 9.0,
+      "color": "Чорний",
+      "description": "Потужний кросовер для подорожей.",
+      "image": "cars/bmw_x5.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 3,
+    "fields": {
+      "brand": "Tesla",
+      "model": "Model 3",
+      "price_per_day": "2500.00",
+      "year": 2022,
+      "available": true,
+      "consumption": 0,
+      "color": "Білий",
+      "description": "Електромобіль з автопілотом.",
+      "image": "cars/tesla_model3.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 4,
+    "fields": {
+      "brand": "Ford",
+      "model": "Mustang",
+      "price_per_day": "1800.00",
+      "year": 2018,
+      "available": true,
+      "consumption": 12.0,
+      "color": "Червоний",
+      "description": "Легендарний спорткар.",
+      "image": "cars/ford_mustang.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 5,
+    "fields": {
+      "brand": "Honda",
+      "model": "Civic",
+      "price_per_day": "900.00",
+      "year": 2021,
+      "available": true,
+      "consumption": 6.0,
+      "color": "Синій",
+      "description": "Економічний та комфортний.",
+      "image": "cars/honda_civic.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 6,
+    "fields": {
+      "brand": "Hyundai",
+      "model": "Elantra",
+      "price_per_day": "850.00",
+      "year": 2020,
+      "available": true,
+      "consumption": 6.2,
+      "color": "Білий",
+      "description": "Сучасний седан.",
+      "image": "cars/hyundai_elantra.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 7,
+    "fields": {
+      "brand": "Kia",
+      "model": "Sportage",
+      "price_per_day": "1200.00",
+      "year": 2019,
+      "available": false,
+      "consumption": 8.0,
+      "color": "Сірий",
+      "description": "Популярний кросовер.",
+      "image": "cars/kia_sportage.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 8,
+    "fields": {
+      "brand": "Volkswagen",
+      "model": "Passat",
+      "price_per_day": "1100.00",
+      "year": 2018,
+      "available": true,
+      "consumption": 7.0,
+      "color": "Чорний",
+      "description": "Німецька якість.",
+      "image": "cars/vw_passat.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 9,
+    "fields": {
+      "brand": "Audi",
+      "model": "A4",
+      "price_per_day": "1500.00",
+      "year": 2021,
+      "available": true,
+      "consumption": 7.5,
+      "color": "Сріблястий",
+      "description": "Преміум седан.",
+      "image": "cars/audi_a4.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 10,
+    "fields": {
+      "brand": "Mercedes-Benz",
+      "model": "C-Class",
+      "price_per_day": "1700.00",
+      "year": 2020,
+      "available": false,
+      "consumption": 7.8,
+      "color": "Білий",
+      "description": "Комфорт та статус.",
+      "image": "cars/mercedes_cclass.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 11,
+    "fields": {
+      "brand": "Renault",
+      "model": "Logan",
+      "price_per_day": "700.00",
+      "year": 2017,
+      "available": true,
+      "consumption": 6.8,
+      "color": "Синій",
+      "description": "Доступний та надійний.",
+      "image": "cars/renault_logan.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 12,
+    "fields": {
+      "brand": "Skoda",
+      "model": "Octavia",
+      "price_per_day": "950.00",
+      "year": 2019,
+      "available": true,
+      "consumption": 6.4,
+      "color": "Зелений",
+      "description": "Практичний вибір.",
+      "image": "cars/skoda_octavia.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 13,
+    "fields": {
+      "brand": "Mazda",
+      "model": "CX-5",
+      "price_per_day": "1300.00",
+      "year": 2021,
+      "available": true,
+      "consumption": 7.2,
+      "color": "Червоний",
+      "description": "Стильний кросовер.",
+      "image": "cars/mazda_cx5.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 14,
+    "fields": {
+      "brand": "Nissan",
+      "model": "Qashqai",
+      "price_per_day": "1150.00",
+      "year": 2020,
+      "available": false,
+      "consumption": 7.1,
+      "color": "Сірий",
+      "description": "Міський кросовер.",
+      "image": "cars/nissan_qashqai.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 15,
+    "fields": {
+      "brand": "Peugeot",
+      "model": "3008",
+      "price_per_day": "1250.00",
+      "year": 2019,
+      "available": true,
+      "consumption": 7.3,
+      "color": "Білий",
+      "description": "Французький комфорт.",
+      "image": "cars/peugeot_3008.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 16,
+    "fields": {
+      "brand": "Opel",
+      "model": "Astra",
+      "price_per_day": "900.00",
+      "year": 2018,
+      "available": true,
+      "consumption": 6.7,
+      "color": "Синій",
+      "description": "Надійний хетчбек.",
+      "image": "cars/opel_astra.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 17,
+    "fields": {
+      "brand": "Chevrolet",
+      "model": "Cruze",
+      "price_per_day": "850.00",
+      "year": 2017,
+      "available": true,
+      "consumption": 7.0,
+      "color": "Чорний",
+      "description": "Американський стиль.",
+      "image": "cars/chevrolet_cruze.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 18,
+    "fields": {
+      "brand": "Fiat",
+      "model": "500",
+      "price_per_day": "800.00",
+      "year": 2021,
+      "available": true,
+      "consumption": 5.5,
+      "color": "Жовтий",
+      "description": "Компактний міський автомобіль.",
+      "image": "cars/fiat_500.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 19,
+    "fields": {
+      "brand": "Subaru",
+      "model": "Forester",
+      "price_per_day": "1400.00",
+      "year": 2020,
+      "available": true,
+      "consumption": 8.5,
+      "color": "Зелений",
+      "description": "Позашляховик для пригод.",
+      "image": "cars/subaru_forester.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 20,
+    "fields": {
+      "brand": "Mitsubishi",
+      "model": "Outlander",
+      "price_per_day": "1350.00",
+      "year": 2019,
+      "available": false,
+      "consumption": 8.2,
+      "color": "Сріблястий",
+      "description": "Сімейний кросовер.",
+      "image": "cars/mitsubishi_outlander.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 21,
+    "fields": {
+      "brand": "Lexus",
+      "model": "RX",
+      "price_per_day": "2200.00",
+      "year": 2022,
+      "available": true,
+      "consumption": 9.5,
+      "color": "Білий",
+      "description": "Преміум кросовер.",
+      "image": "cars/lexus_rx.jpg"
+    }
+  },
+  {
+    "model": "car.car",
+    "pk": 22,
+    "fields": {
+      "brand": "Volkswagen",
+      "model": "Golf",
+      "price_per_day": "950.00",
+      "year": 2018,
+      "available": true,
+      "consumption": 6.3,
+      "color": "Синій",
+      "description": "Компактний та економічний.",
+      "image": "cars/vw_golf.jpg"
+    }
+  }
+]
