@@ -98,3 +98,25 @@ def rent_car(request):
     else:
         form = BookingForm(initial=initial)
     return render(request, './rent_car.html', {'form': form, 'booked_ranges': booked_ranges})
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Car
+
+def add_to_favorites(request, car_id):
+    favorites = request.session.get('favorites', [])
+    if car_id not in favorites:
+        favorites.append(car_id)
+        request.session['favorites'] = favorites
+    return redirect('car_detail', id=car_id)
+
+def remove_from_favorites(request, car_id):
+    favorites = request.session.get('favorites', [])
+    if car_id in favorites:
+        favorites.remove(car_id)
+        request.session['favorites'] = favorites
+    return redirect('favorites_list')
+
+def favorites_list(request):
+    favorites = request.session.get('favorites', [])
+    cars = Car.objects.filter(id__in=favorites)
+    return render(request, './favorites_list.html', {'cars': cars})
