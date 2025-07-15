@@ -1,0 +1,267 @@
+{% extends '_layout.html' %}
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4 text-primary fw-bold animated fadeIn">User Profile</h1>
+
+   
+    <div class="card mb-5 shadow-sm border-0 rounded-3 animated zoomIn" style="animation-delay: 0.2s;">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">User Details</h2>
+            <a href="{% url 'edit_profile' %}" class="btn btn-light btn-sm">
+                <i class="fas fa-edit"></i> Редагувати
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <p><strong>Username:</strong> {{ user.username }}</p>
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                    <p><strong>First Name:</strong> {{ user.first_name|default:"Not set" }}</p>
+                    <p><strong>Last Name:</strong> {{ user.last_name|default:"Not set" }}</p>
+                    <p><strong>Role:</strong> {{ user.get_role_display }}</p>
+                    <p><strong>Date Joined:</strong> {{ user.date_joined|date:"F d, Y" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5 text-center animated fadeInUp" style="animation-delay: 0.4s;">
+        <a href="{% url 'logout' %}" class="btn btn-danger btn-lg">Вийти з акаунту</a>
+        {% if user.is_staff or user.role == 0 %}
+            <a href="/admin/" class="btn btn-success btn-lg ms-3" target="_blank">
+                <i class="fas fa-cog"></i> Адмін панель
+            </a>
+        {% endif %}
+    </div>
+
+    
+    <div class="card mb-5 shadow-sm border-0 rounded-3 animated zoomIn" style="animation-delay: 0.6s;">
+        <div class="card-header bg-primary text-white">
+            <h2>Ваші оренди</h2>
+        </div>
+        <div class="card-body">
+            {% if bookings %}
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" id="bookings-container">
+                    {% for booking in bookings %}
+                        <div class="col" data-booking-id="{{ booking.id }}">
+                            <div class="card h-100 booking-card">
+                                {% if booking.car.image %}
+                                    <a href="{% url 'car_detail' car_id=booking.car.id %}">
+                                        <img src="{{ booking.car.image.url }}" class="card-img-top img-fluid rounded-top" alt="{{ booking.car }}" style="height: 200px; object-fit: cover; cursor: pointer;">
+                                    </a>
+                                {% endif %}
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">{{ booking.car.brand }} {{ booking.car.model }}</h5>
+                                    <p class="card-text">
+                                        <strong>Оренда з:</strong> {{ booking.date_from|date:"d.m.Y" }}<br>
+                                        <strong>до:</strong> {{ booking.date_to|date:"d.m.Y" }}<br>
+                                        <strong>Статус:</strong> <span class="badge bg-{% if booking.status == 'confirmed' %}success{% elif booking.status == 'pending' %}warning{% else %}danger{% endif %}">{{ booking.get_status_display }}</span><br>
+                                        <strong>Вартість:</strong> {{ booking.total_price }} USD
+                                    </p>
+                                </div>
+                                <div class="card-footer text-center">
+                                    {% if booking.status == 'pending' %}
+                                        <button type="button" class="btn btn-sm btn-danger cancel-booking-btn" 
+                                                data-booking-id="{{ booking.id }}"
+                                                data-car-name="{{ booking.car.brand }} {{ booking.car.model }}"
+                                                data-date-from="{{ booking.date_from|date:'d.m.Y' }}"
+                                                data-date-to="{{ booking.date_to|date:'d.m.Y' }}">
+                                            Скасувати
+                                        </button>
+                                    {% endif %}
+                                    <a href="{% url 'booking_success' booking.id %}" class="btn btn-sm btn-info ms-2">Деталі</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="text-muted text-center">У вас ще немає бронювань.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="cancelBookingModal" tabindex="-1" aria-labelledby="cancelBookingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="cancelBookingModalLabel">Скасувати бронювання</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Ви впевнені, що хочете скасувати бронювання для <strong id="modal-car-name"></strong>?</p>
+                <p><strong>Період:</strong> <span id="modal-date-range"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                <form method="post" id="cancelForm" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Скасувати бронювання</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .animated {
+        animation-duration: 0.8s;
+    }
+    .fadeIn {
+        animation-name: fadeIn;
+    }
+    .fadeInUp {
+        animation-name: fadeInUp;
+    }
+    .zoomIn {
+        animation-name: zoomIn;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes zoomIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .booking-card .card-img-top:hover {
+        opacity: 0.9;
+    }
+    
+   
+    .modal {
+        z-index: 1050;
+    }
+    .modal-backdrop {
+        z-index: 1040;
+    }
+    
+    
+    .modal.fade .modal-dialog {
+        transition: none;
+        transform: none;
+    }
+    
+    @media (max-width: 768px) {
+        .card-img-top {
+            height: 150px;
+        }
+        .btn-lg {
+            font-size: 0.9rem;
+            padding: 0.3rem 0.6rem;
+        }
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('cancelBookingModal');
+    const modalInstance = new bootstrap.Modal(modal);
+    const cancelForm = document.getElementById('cancelForm');
+    const modalCarName = document.getElementById('modal-car-name');
+    const modalDateRange = document.getElementById('modal-date-range');
+    let currentBookingId = null;
+    
+    
+    document.querySelectorAll('.cancel-booking-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const bookingId = this.dataset.bookingId;
+            const carName = this.dataset.carName;
+            const dateFrom = this.dataset.dateFrom;
+            const dateTo = this.dataset.dateTo;
+            
+            
+            currentBookingId = bookingId;
+            
+          
+            modalCarName.textContent = carName;
+            modalDateRange.textContent = `${dateFrom} - ${dateTo}`;
+            
+            
+            try {
+                cancelForm.action = `{% url 'cancel_booking' 0 %}`.replace('0', bookingId);
+            } catch (e) {
+               
+                cancelForm.action = `/booking/${bookingId}/cancel/`;
+            }
+            
+            // Показуємо модал
+            modalInstance.show();
+        });
+    });
+    
+    
+    cancelForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const bookingId = currentBookingId;
+        const card = document.querySelector(`[data-booking-id="${bookingId}"]`);
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+           
+            modalInstance.hide();
+            
+            if (data.success) {
+                alert(data.message);
+                
+                if (card) {
+                    card.remove();
+                }
+                
+            
+                const bookingsContainer = document.getElementById('bookings-container');
+                if (bookingsContainer && bookingsContainer.children.length === 0) {
+                    bookingsContainer.innerHTML = '<p class="text-muted text-center">У вас ще немає бронювань.</p>';
+                }
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Сталася помилка при скасуванні бронювання.');
+            modalInstance.hide();
+        });
+    });
+    
+    
+    modal.addEventListener('hidden.bs.modal', function () {
+        cancelForm.reset();
+        modalCarName.textContent = '';
+        modalDateRange.textContent = '';
+        currentBookingId = null;
+    });
+});
+</script>
+{% endblock %}

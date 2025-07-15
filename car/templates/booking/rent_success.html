@@ -1,11 +1,65 @@
-{% extends "layout.html" %}
+{% extends "_layout.html" %}
 {% block content %}
 <div class="container mt-5">
-    <h2>Бронювання успішне!</h2>
-    <p>Ваше бронювання (ID: {{ booking.id }}) відправлено на підтвердження.</p>
-    <p>Автомобіль: {{ booking.car }}</p>
-    <p>Період: {{ booking.date_from }} - {{ booking.date_to }}</p>
-    <p>Статус: {{ booking.get_status_display }}</p>
-    <a href="{% url 'car_index' %}" class="btn btn-primary">Повернутися</a>
+    <div class="text-center">
+        <h2 class="display-4 text-success animated fadeIn">Бронювання успішне! 🎉</h2>
+        <p class="lead animated fadeIn" style="animation-delay: 0.2s;">
+            Ваше бронювання (ID: <strong>{{ booking.id }}</strong>) відправлено на підтвердження.
+        </p>
+        <div class="card mx-auto mt-4 p-4 shadow-sm animated zoomIn" style="max-width: 500px; animation-delay: 0.4s;">
+            <div class="card-body">
+                <h5 class="card-title">Деталі бронювання:</h5>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Автомобіль:</strong> {{ booking.car.brand }} {{ booking.car.model }}</li>
+                    <li class="list-group-item"><strong>Період:</strong> {{ booking.date_from }} - {{ booking.date_to }}</li>
+                    <li class="list-group-item"><strong>Статус:</strong> {{ booking.get_status_display }}</li>
+                    <li class="list-group-item"><strong>Вартість (за добу):</strong> {{ booking.car.price_per_day }} грн</li>
+                    <li class="list-group-item"><strong>Загальна сума:</strong> {{ total_price }} грн</li>
+                </ul>
+            </div>
+        </div>
+        <p class="mt-3 text-muted animated fadeInUp" style="animation-delay: 0.6s;">
+            Ми повідомимо вас про підтвердження на ваш email. Дякуємо за вибір нашого сервісу!
+        </p>
+        <div class="mt-4 animated bounceIn" style="animation-delay: 0.8s;">
+            <a href="{% url 'car_index' %}" class="btn btn-primary btn-lg">Повернутися до каталогу</a>
+            <a href="{% url 'profile' %}" class="btn btn-outline-secondary btn-lg ms-2">Переглянути профіль</a>
+        </div>
+    </div>
 </div>
+
+<style>
+    .animated {
+        animation-duration: 1s;
+    }
+    .fadeIn {
+        animation-name: fadeIn;
+    }
+    .fadeInUp {
+        animation-name: fadeInUp;
+    }
+    .zoomIn {
+        animation-name: zoomIn;
+    }
+    .bounceIn {
+        animation-name: bounceIn;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes zoomIn {
+        from { opacity: 0; transform: scale(0.5); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes bounceIn {
+        0% { transform: scale(0.5); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+</style>
 {% endblock %}

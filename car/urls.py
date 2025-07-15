@@ -2,9 +2,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.index, name='car_index'),  # Корінь додатка car
+    path('', views.index, name='car_index'),
     path('catalog/', views.catalog, name='car_catalog'),
-    path('car/<int:id>/', views.car_detail, name='car_detail'),
+    path('car/<int:car_id>/', views.car_detail, name='car_detail'),
     path('car/<int:id>/gallery/', views.car_gallery, name='car_gallery'),
     path('create/', views.create_car, name='create_car'),
     path('delete/<int:id>/', views.delete_car, name='delete_car'),

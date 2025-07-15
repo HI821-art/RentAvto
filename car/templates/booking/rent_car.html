@@ -1,23 +1,34 @@
 {% extends "_layout.html" %}
+
 {% block content %}
-<div class="container mt-5" style="max-width: 500px;">
+<div class="container mt-5" style="max-width: 600px;">
     <div class="card shadow">
         <div class="card-header bg-primary text-white">
             <h2 class="mb-0" style="font-size:1.5rem;">Оформлення оренди авто</h2>
         </div>
         <div class="card-body">
+            
+            <div class="alert alert-primary mb-3">
+                🚗 <strong>{{ selected_car.brand }} {{ selected_car.model }}</strong> ({{ selected_car.year }}) —
+                <span class="fw-bold">{{ selected_car.price_per_day }} USD/день</span><br>
+                <small>{{ selected_car.description }}</small>
+            </div>
+
+            
             {% if messages %}
                 {% for message in messages %}
                     <div class="alert alert-danger">{{ message }}</div>
                 {% endfor %}
             {% endif %}
+
+            
             {% if booked_ranges %}
                 <button class="btn btn-outline-info mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#bookedDates" aria-expanded="false" aria-controls="bookedDates">
-                    Показати/сховати зайняті дати
+                    📅 Показати зайняті дати
                 </button>
                 <div class="collapse" id="bookedDates">
-                    <div class="alert alert-info">
-                        <strong>Зайняті дати для цього авто:</strong>
+                    <div class="alert alert-info mt-2">
+                        <strong>Зайняті дати:</strong>
                         <ul class="mb-0">
                             {% for r in booked_ranges %}
                                 <li>{{ r.date_from }} — {{ r.date_to }}</li>
@@ -26,7 +37,9 @@
                     </div>
                 </div>
             {% endif %}
-            <form method="post">
+
+           
+            <form method="post" id="rentalForm">
                 {% csrf_token %}
                 {% for field in form %}
                     <div class="mb-3">
@@ -40,9 +53,61 @@
                         {% endfor %}
                     </div>
                 {% endfor %}
+
+              
+                <div class="mb-3">
+                    <label class="form-label">💳 Спосіб оплати:</label><br>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment_method" value="card" checked>
+                        <label class="form-check-label">Банківська картка</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment_method" value="cash">
+                        <label class="form-check-label">Готівка при отриманні</label>
+                    </div>
+                </div>
+
+                
+                <div class="alert alert-success" id="totalPrice" style="display:none;"></div>
+
                 <button type="submit" class="btn btn-success w-100 mt-3">Забронювати</button>
             </form>
+
+         
+            <div class="alert alert-warning mt-4">
+                🔐 В оренду включено базове страхування та підтримка 24/7.
+            </div>
+            <div class="text-muted small mt-2 text-end">
+                Натискаючи «Забронювати», ви погоджуєтесь з <a href="#">умовами оренди</a>.
+            </div>
         </div>
     </div>
 </div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('rentalForm');
+   const price = parseFloat("{{ selected_car.price_per_day|default:0 }}");
+    const startField = form.querySelector('[name="date_from"]');
+    const endField = form.querySelector('[name="date_to"]');
+    const totalDiv = document.getElementById('totalPrice');
+
+    function calcPrice() {
+        const start = new Date(startField.value);
+        const end = new Date(endField.value);
+        if (!isNaN(start) && !isNaN(end) && end > start) {
+            const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+            const total = days * price;
+            totalDiv.innerHTML = `💰 Загальна вартість оренди: <strong>${total} USD</strong> (${days} дн.)`;
+            totalDiv.style.display = 'block';
+        } else {
+            totalDiv.style.display = 'none';
+        }
+    }
+
+    startField.addEventListener('change', calcPrice);
+    endField.addEventListener('change', calcPrice);
+});
+</script>
 {% endblock %}

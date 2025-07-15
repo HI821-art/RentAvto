@@ -1,9 +1,145 @@
-<!-- car/templates/car_index.html -->
 {% extends "_layout.html" %}
+
 {% block content %}
 <div class="container mt-5">
-    <h1>Car Rental Service</h1>
-    <p>Ласкаво просимо до нашого сервісу прокату автомобілів!</p>
-    <a href="{% url 'car_catalog' %}" class="btn btn-primary">Переглянути автомобілі</a>
+    <h1 class="mb-3 text-center text-primary fw-bold animated fadeIn">Car Rental Service</h1>
+    <p class="mb-4 text-center text-muted">Ласкаво просимо до нашого сервісу прокату автомобілів! Обирайте найкращий автомобіль для ваших подорожей!</p>
+
+  
+    <div id="carCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+        <div class="carousel-inner">
+            {% for car in cars %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <a href="{% url 'car_detail' car.id %}" class="text-decoration-none">
+                        <div class="row justify-content-center">
+                            <div class="col-md-8">
+                                <div class="card h-100 shadow-lg border-0 rounded-3 position-relative">
+                                    {% if car.image %}
+                                        <img src="{{ car.image.url }}" class="card-img-top img-fluid rounded-top" alt="{{ car.brand }} {{ car.model }}" style="object-fit: cover; height: 300px; cursor: pointer;">
+                                    {% else %}
+                                        <img src="../../media/cars/static.png" class="card-img-top img-fluid rounded-top" alt="No image available" style="object-fit: cover; height: 300px; cursor: pointer;">
+                                    {% endif %}
+                                    <div class="card-body text-center bg-light bg-gradient p-4">
+                                        <h5 class="card-title text-dark">{{ car.brand }} {{ car.model }}</h5>
+                                        <p class="card-text">Ціна за день: <strong class="text-success">{{ car.price_per_day }} UAH</strong></p>
+                                        <p class="card-text text-muted">Рік: {{ car.year }}</p>
+                                        {% if not car.available %}
+                                            <span class="badge bg-danger position-absolute top-0 end-0 m-2">Недоступно</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% empty %}
+                <div class="carousel-item active">
+                    <div class="card text-center h-100">
+                        <div class="card-body">
+                            <p class="card-text text-danger">Наразі немає доступних автомобілів.</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+      
+        <div class="carousel-indicators">
+            {% for car in cars %}
+                <button type="button" data-bs-target="#carCarousel" data-bs-slide-to="{{ forloop.counter0 }}" class="{% if forloop.first %}active{% endif %}" aria-label="Slide {{ forloop.counter }}" aria-current="{% if forloop.first %}true{% endif %}"></button>
+            {% empty %}
+                <button type="button" data-bs-target="#carCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1" aria-current="true"></button>
+            {% endfor %}
+        </div>
+
+     
+        <button class="carousel-control-prev" type="button" data-bs-target="#carCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon bg-dark bg-opacity-50 rounded-circle p-2" aria-hidden="true"></span>
+            <span class="visually-hidden">Попередній</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon bg-dark bg-opacity-50 rounded-circle p-2" aria-hidden="true"></span>
+            <span class="visually-hidden">Наступний</span>
+        </button>
+    </div>
+
+   
+    <div class="mt-5">
+        <h3 class="text-center mb-4 text-primary">Чому обирають нас?</h3>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 text-center p-3 shadow-sm">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Надійність</h5>
+                    <p class="card-text text-muted">Гарантуємо безпеку та якість кожного автомобіля.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 text-center p-3 shadow-sm">
+                    <i class="fas fa-car-side fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Широкий вибір</h5>
+                    <p class="card-text text-muted">Понад 20 моделей для будь-яких потреб.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 text-center p-3 shadow-sm">
+                    <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                    <h5 class="card-title">Підтримка 24/7</h5>
+                    <p class="card-text text-muted">Завжди готові допомогти вам!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 text-center">
+        <a href="{% url 'car_catalog' %}" class="btn btn-primary btn-lg">Переглянути всі автомобілі</a>
+    </div>
 </div>
+
+<style>
+    .carousel-fade .carousel-item {
+        transition: opacity 0.6s ease-in-out;
+    }
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    .bg-gradient {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    .carousel-indicators button {
+        background-color: #6c757d;
+        border: none;
+        border-radius: 50%;
+        width: 12px;
+        height: 12px;
+        margin: 0 5px;
+        transition: background-color 0.3s ease;
+    }
+    .carousel-indicators button.active {
+        background-color: #007bff;
+    }
+    .carousel-control-prev-icon, .carousel-control-next-icon {
+        width: 40px;
+        height: 40px;
+    }
+    .position-absolute {
+        z-index: 1;
+    }
+    @media (max-width: 768px) {
+        .card-img-top {
+            height: 200px;
+        }
+        .col-md-4 {
+            margin-bottom: 1rem;
+        }
+        .carousel-control-prev-icon, .carousel-control-next-icon {
+            width: 30px;
+            height: 30px;
+        }
+    }
+</style>
 {% endblock %}

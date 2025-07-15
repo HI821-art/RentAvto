@@ -1,18 +1,87 @@
 {% extends "_layout.html" %}
+
 {% block content %}
 <div class="container mt-5">
-    <h2>Улюблені авто</h2>
-    {% if cars %}
-        <ul class="list-group">
-            {% for car in cars %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <a href="{% url 'car_detail' car.id %}">{{ car.brand }} {{ car.model }}</a>
-                    <a href="{% url 'remove_from_favorites' car.id %}" class="btn btn-sm btn-danger">Видалити</a>
-                </li>
+    <h2 class="text-center mb-4 text-primary fw-bold animated fadeIn">Улюблені авто</h2>
+
+    {% if favorites %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            {% for car in favorites %}
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0 rounded-3 animated zoomIn">
+                        
+                        {% if car.image %}
+                            <a href="{% url 'car_detail' car_id=car.id %}">
+                                <img src="{{ car.image.url }}" class="card-img-top img-fluid rounded-top" alt="{{ car.brand }} {{ car.model }}" style="object-fit: cover; height: 200px; cursor: pointer;">
+                            </a>
+                        {% else %}
+                            <a href="{% url 'car_detail' car_id=car.id %}">
+                                <img src="../../media/cars/static.png" class="card-img-top img-fluid rounded-top" alt="No image available" style="object-fit: cover; height: 200px; cursor: pointer;">
+                            </a>
+                        {% endif %}
+                        <div class="card-body text-center bg-light">
+                            <h5 class="card-title text-dark">{{ car.brand }} {{ car.model }}</h5>
+                            <p class="card-text text-muted">Рік: {{ car.year }}</p>
+                            <p class="card-text text-success">Ціна: {{ car.price_per_day }} USD/день</p>
+                            <div class="d-flex justify-content-center">
+                                <a href="{% url 'car_detail' car_id=car.id %}" class="btn btn-primary btn-sm me-2">Детальніше</a>
+                                <a href="{% url 'remove_from_favorites' car_id=car.id %}" class="btn btn-danger btn-sm">Видалити</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     {% else %}
-        <div class="alert alert-info mt-3">Список улюблених авто порожній.</div>
+        <div class="alert alert-info mt-3 text-center animated bounceIn" style="animation-delay: 0.2s;">
+            <h4>Список улюблених авто порожній.</h4>
+            <p class="mt-2">Додайте свої улюблені автомобілі з каталогу!</p>
+            <a href="{% url 'car_catalog' %}" class="btn btn-outline-primary mt-3">Переглянути каталог</a>
+        </div>
     {% endif %}
 </div>
+
+<style>
+    .animated {
+        animation-duration: 0.8s;
+    }
+    .fadeIn {
+        animation-name: fadeIn;
+    }
+    .zoomIn {
+        animation-name: zoomIn;
+    }
+    .bounceIn {
+        animation-name: bounceIn;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes zoomIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes bounceIn {
+        0% { transform: scale(0.9); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    @media (max-width: 768px) {
+        .card-img-top {
+            height: 150px;
+        }
+        .btn-sm {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+    }
+</style>
 {% endblock %}

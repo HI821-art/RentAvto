@@ -1,6 +1,5 @@
-# car/models.py
 from django.db import models
-
+from user.models import User
 
 class Car(models.Model):
     brand = models.CharField(max_length=50)
@@ -20,6 +19,7 @@ class Car(models.Model):
         ordering = ["brand", "model"]
 
 class Booking(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings', default=1)
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
@@ -28,7 +28,7 @@ class Booking(models.Model):
     date_to = models.DateField()
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(
-        max_length=20,
+        max_length=50,
         choices=[
             ('pending', 'Очікує підтвердження'),
             ('confirmed', 'Підтверджено'),
@@ -45,4 +45,5 @@ class Booking(models.Model):
 
     @property
     def total_price(self):
-        return self.car.price_per_day * (self.date_to - self.date_from).days
+        days = (self.date_to - self.date_from).days
+        return self.car.price_per_day * max(days, 0)  

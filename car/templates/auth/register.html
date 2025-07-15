@@ -1,0 +1,149 @@
+{% extends "_layout.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm border-0 rounded-3 animated fadeIn" style="animation-delay: 0.2s; max-width: 500px; margin: 0 auto;">
+        <div class="card-header bg-primary text-white text-center">
+            <h2 class="mb-0">Реєстрація</h2>
+        </div>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} mt-3 animated fadeIn" style="animation-delay: 0.3s;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% if error %}
+                <div class="alert alert-danger mt-3 animated shake" style="animation-delay: 0.3s;">
+                    {{ error }}
+                </div>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex flex-column align-items-start py-3">
+                        <label for="id_username" class="form-label fw-bold">Ім'я користувача:</label>
+                        <input type="text" name="username" id="id_username" class="form-control" required minlength="3" maxlength="150">
+                    </li>
+                    <li class="list-group-item d-flex flex-column align-items-start py-3">
+                        <label for="id_email" class="form-label fw-bold">Електронна пошта:</label>
+                        <input type="email" name="email" id="id_email" class="form-control" required>
+                    </li>
+                    <li class="list-group-item d-flex flex-column align-items-start py-3">
+                        <label for="id_phone" class="form-label fw-bold">Номер телефону:</label>
+                        <input type="tel" name="phone" id="id_phone" class="form-control" placeholder="+380123456789" pattern="^\+380\d{9}$" title="Введіть номер у форматі +380XXXXXXXXX" required>
+                    </li>
+                    <li class="list-group-item d-flex flex-column align-items-start py-3">
+                        <label for="id_password" class="form-label fw-bold">Пароль:</label>
+                        <input type="password" name="password" id="id_password" class="form-control" required minlength="8">
+                    </li>
+                    <li class="list-group-item d-flex flex-column align-items-start py-3">
+                        <label for="id_confirm_password" class="form-label fw-bold">Підтвердити пароль:</label>
+                        <input type="password" name="confirm_password" id="id_confirm_password" class="form-control" required>
+                    </li>
+                    <li class="list-group-item d-flex flex-column align-items-start py-3">
+                        <label for="id_first_name" class="form-label fw-bold">Ім'я:</label>
+                        <input type="text" name="first_name" id="id_first_name" class="form-control" required>
+                    </li>
+                    <li class="list-group-item d-flex flex-column align-items-start py-3">
+                        <label for="id_last_name" class="form-label fw-bold">Прізвище:</label>
+                        <input type="text" name="last_name" id="id_last_name" class="form-control" required>
+                    </li>
+                    <li class="list-group-item d-flex flex-column align-items-start py-3">
+                        <label for="id_role" class="form-label fw-bold">Роль:</label>
+                        <select name="role" id="id_role" class="form-select" required>
+                            <option value="0">Admin</option>
+                            <option value="1" selected>User</option>
+                        </select>
+                    </li>
+                </ul>
+                <button type="submit" class="btn btn-primary w-100 mt-4 animated bounceIn" style="animation-delay: 0.4s;">Зареєструватися</button>
+            </form>
+            <div class="text-center mt-3">
+                <p>Вже маєте акаунт? <a href="{% url 'login' %}" class="btn btn-link">Увійти</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .animated {
+        animation-duration: 0.8s;
+    }
+    .fadeIn {
+        animation-name: fadeIn;
+    }
+    .bounceIn {
+        animation-name: bounceIn;
+    }
+    .shake {
+        animation-name: shake;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes bounceIn {
+        0% { transform: scale(0.9); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+        100% { transform: translateX(0); }
+    }
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+    .form-control, .form-select {
+        border-radius: 0.25rem;
+        border-color: #ced4da;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+    @media (max-width: 576px) {
+        .card {
+            margin: 0 10px;
+        }
+        .btn {
+            font-size: 0.9rem;
+            padding: 0.4rem 0.8rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const password = document.getElementById('id_password');
+        const confirmPassword = document.getElementById('id_confirm_password');
+        const form = document.querySelector('form');
+
+        confirmPassword.addEventListener('input', function() {
+            if (password.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity("Паролі не збігаються");
+                confirmPassword.classList.add('is-invalid');
+            } else {
+                confirmPassword.setCustomValidity("");
+                confirmPassword.classList.remove('is-invalid');
+            }
+        });
+
+        form.addEventListener('submit', function(event) {
+            if (password.value.length < 8) {
+                event.preventDefault();
+                alert('Пароль повинен містити щонайменше 8 символів.');
+            }
+        });
+    });
+</script>
+{% endblock %}

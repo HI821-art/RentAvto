@@ -1,0 +1,145 @@
+{% extends "_layout.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">Редагування профілю</h2>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <form method="post" id="editProfileForm">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_username" class="form-label">Ім'я користувача:</label>
+                                    <input type="text" name="username" id="id_username" class="form-control" 
+                                           value="{{ user.username }}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_email" class="form-label">Електронна пошта:</label>
+                                    <input type="email" name="email" id="id_email" class="form-control" 
+                                           value="{{ user.email }}" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_first_name" class="form-label">Ім'я:</label>
+                                    <input type="text" name="first_name" id="id_first_name" class="form-control" 
+                                           value="{{ user.first_name|default:'' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_last_name" class="form-label">Прізвище:</label>
+                                    <input type="text" name="last_name" id="id_last_name" class="form-control" 
+                                           value="{{ user.last_name|default:'' }}">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_phone" class="form-label">Номер телефону:</label>
+                            <input type="tel" name="phone" id="id_phone" class="form-control" 
+                                   value="{{ user.phone|default:'' }}" placeholder="+380123456789" 
+                                   pattern="^\+380\d{9}$" title="Введіть номер у форматі +380XXXXXXXXX">
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <h5 class="text-muted">Зміна пароля <small class="text-muted">(залиште пустим, якщо не хочете міняти)</small></h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_current_password" class="form-label">Поточний пароль:</label>
+                                    <input type="password" name="current_password" id="id_current_password" 
+                                           class="form-control" placeholder="Введіть поточний пароль (якщо міняєте пароль)">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_new_password" class="form-label">Новий пароль:</label>
+                                    <input type="password" name="new_password" id="id_new_password" 
+                                           class="form-control" placeholder="Введіть новий пароль (якщо міняєте пароль)">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_confirm_password" class="form-label">Підтвердити новий пароль:</label>
+                                    <input type="password" name="confirm_password" id="id_confirm_password" 
+                                           class="form-control" placeholder="Підтвердіть новий пароль">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'profile' %}" class="btn btn-secondary me-md-2">Скасувати</a>
+                            <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('editProfileForm').addEventListener('submit', function(e) {
+    console.log('Form submitted');
+    
+  
+    const formData = new FormData(this);
+    for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+    }
+});
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPassword = document.getElementById('id_current_password');
+    const newPassword = document.getElementById('id_new_password');
+    const confirmPassword = document.getElementById('id_confirm_password');
+    
+    
+    function checkPasswordFields() {
+        const hasCurrentPassword = currentPassword.value.trim() !== '';
+        const hasNewPassword = newPassword.value.trim() !== '';
+        const hasConfirmPassword = confirmPassword.value.trim() !== '';
+        
+        
+        if (hasCurrentPassword || hasNewPassword || hasConfirmPassword) {
+            currentPassword.required = true;
+            newPassword.required = true;
+            confirmPassword.required = true;
+        } else {
+            currentPassword.required = false;
+            newPassword.required = false;
+            confirmPassword.required = false;
+        }
+    }
+    
+   
+    currentPassword.addEventListener('input', checkPasswordFields);
+    newPassword.addEventListener('input', checkPasswordFields);
+    confirmPassword.addEventListener('input', checkPasswordFields);
+});
+</script>
+{% endblock %}

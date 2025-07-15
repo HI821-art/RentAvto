@@ -18,8 +18,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'widget_tweaks',
-    "cart",
     "car",
+    'user',
 ]
 
 MIDDLEWARE = [
@@ -36,19 +36,20 @@ ROOT_URLCONF = "shop_app.urls"
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
-                "cart.context_processors.cart_count",
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [Path('D:/Python/Django-SPD311-master/templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
 ]
+
+STATICFILES_DIRS = [Path('D:/Python/Django-SPD311-master/static')]
 
 WSGI_APPLICATION = "shop_app.wsgi.application"
 
@@ -101,8 +102,8 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_ROOT = 'D:\\Python\\Django-SPD311-master\\media'
+MEDIA_URL = '/media/'
 
 STATIC_LOCATION = "static"
 MEDIA_LOCATION = "media"
@@ -117,9 +118,10 @@ SECRET_KEY = "django-insecure-nolgm78q4rpd&ha+gxy)nw7a4(jbrr5f&zt18%h%+7b2@o&@#p
 
 DEBUG = TRUE  # bool(os.environ.get("DEBUG", default=1))
 
+
 ALLOWED_HOSTS = ["*"]
 
-# AUTH_USER_MODEL = "users.User"
+AUTH_USER_MODEL = 'user.User'
 
 LOGIN_URL = "/login/"  # Where to go if not logged in
 LOGIN_REDIRECT_URL = "/"  # Where to go after login
