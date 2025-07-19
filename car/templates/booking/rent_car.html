@@ -10,7 +10,7 @@
             
             <div class="alert alert-primary mb-3">
                 🚗 <strong>{{ selected_car.brand }} {{ selected_car.model }}</strong> ({{ selected_car.year }}) —
-                <span class="fw-bold">{{ selected_car.price_per_day }} USD/день</span><br>
+                <span class="fw-bold">{{ selected_car.price_per_day }} грн/день</span><br>
                 <small>{{ selected_car.description }}</small>
             </div>
 
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!isNaN(start) && !isNaN(end) && end > start) {
             const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
             const total = days * price;
-            totalDiv.innerHTML = `💰 Загальна вартість оренди: <strong>${total} USD</strong> (${days} дн.)`;
+            totalDiv.innerHTML = `💰 Загальна вартість оренди: <strong>${total} грн</strong> (${days} дн.)`;
             totalDiv.style.display = 'block';
         } else {
             totalDiv.style.display = 'none';

@@ -224,13 +224,7 @@ def rent_car(request):
 
 
 
-    today = date.today()
-    return Booking.objects.filter(
-        car=car,
-        status__in=['pending', 'confirmed'],
-        date_from__lte=today,
-        date_to__gte=today
-    ).exists()
+
 
 
 def booking_success(request, booking_id):

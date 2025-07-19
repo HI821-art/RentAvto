@@ -59,7 +59,7 @@
                                         <strong>Оренда з:</strong> {{ booking.date_from|date:"d.m.Y" }}<br>
                                         <strong>до:</strong> {{ booking.date_to|date:"d.m.Y" }}<br>
                                         <strong>Статус:</strong> <span class="badge bg-{% if booking.status == 'confirmed' %}success{% elif booking.status == 'pending' %}warning{% else %}danger{% endif %}">{{ booking.get_status_display }}</span><br>
-                                        <strong>Вартість:</strong> {{ booking.total_price }} USD
+                                        <strong>Вартість:</strong> {{ booking.total_price }} грн
                                     </p>
                                 </div>
                                 <div class="card-footer text-center">

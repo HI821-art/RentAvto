@@ -2,8 +2,7 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-import json 
-from car.models import Car
+
 
 def main():
     """Run administrative tasks."""
@@ -24,7 +23,3 @@ if __name__ == "__main__":
 
 
 
-with open('cars.json', encoding='utf-8') as f:
-    data = json.load(f)
-    for item in data:
-        Car.objects.create(**item)

@@ -22,7 +22,7 @@
                         <div class="card-body text-center bg-light">
                             <h5 class="card-title text-dark">{{ car.brand }} {{ car.model }}</h5>
                             <p class="card-text text-muted">Рік: {{ car.year }}</p>
-                            <p class="card-text text-success">Ціна: {{ car.price_per_day }} USD/день</p>
+                            <p class="card-text text-success">Ціна: {{ car.price_per_day }} грн/день</p>
                             <div class="d-flex justify-content-center">
                                 <a href="{% url 'car_detail' car_id=car.id %}" class="btn btn-primary btn-sm me-2">Детальніше</a>
                                 <a href="{% url 'remove_from_favorites' car_id=car.id %}" class="btn btn-danger btn-sm">Видалити</a>
