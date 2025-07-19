@@ -20,6 +20,9 @@ INSTALLED_APPS = [
     'user',
     'storages',
 ]
+CSRF_TRUSTED_ORIGINS = [
+    "https://django-rentauto-spd311.azurewebsites.net",
+]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
