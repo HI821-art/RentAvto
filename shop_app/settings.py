@@ -74,6 +74,8 @@ AZURE_CONTAINER_STATIC = "static"
 AZURE_CONTAINER_MEDIA = "media"
 AZURE_ACCOUNT_NAME = "carsmedia"
 SECRET_KEY = os.environ.get("SECRET_KEY")
+if not SECRET_KEY:
+    raise Exception("SECRET_KEY is missing! Check your environment variables.")
 AZURE_ACCOUNT_KEY = os.environ.get("AZURE_ACCOUNT_KEY")
 AZURE_CONNECTION_STRING = os.environ.get("AZURE_CONNECTION_STRING")
 AZURE_CUSTOM_DOMAIN = f"{AZURE_ACCOUNT_NAME}.blob.core.windows.net"
